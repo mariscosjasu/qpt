@@ -350,6 +350,24 @@ body {
 }
 .btn-share:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--shadow); }
 
+.btn-story {
+  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  color: #fff;
+  border-color: var(--ink);
+  box-shadow: 4px 4px 0 var(--shadow);
+}
+.btn-story:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--shadow); }
+
+.story-hint {
+  font-size: 0.8rem;
+  color: var(--accent-dark);
+  background: var(--bg-2);
+  border: 1px dashed var(--line);
+  border-radius: 4px;
+  padding: 8px 10px;
+  margin-top: 4px;
+}
+
 .share-menu {
   margin-top: 4px;
   border: 1px dashed var(--line);

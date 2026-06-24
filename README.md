@@ -21,6 +21,8 @@ abuso* (10), pasando por un punto sano de **equilibrio/asertividad** en el centr
 - 💾 **Guarda tu último resultado** en el dispositivo (`localStorage`).
 - 📣 **Compartir resultado** en redes (WhatsApp, Facebook, X, Telegram, Instagram vía
   compartir nativo del móvil) con un texto que promociona el juego e incluye el enlace.
+- 📸 **Compartir como imagen para Instagram Stories**: genera una tarjeta vertical
+  (1080x1920) con tu nombre, tu puntuación y el enlace, lista para subir a tu historia.
 - 📴 **Funciona sin internet** (offline) gracias a un *service worker*.
 - 📱 **Instalable** como app (PWA) en móvil y PC; puede empaquetarse como **APK**.
 

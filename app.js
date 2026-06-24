@@ -341,6 +341,8 @@ const els = {
   soundToggle: document.getElementById("sound-toggle"),
   soundIcon: document.getElementById("sound-icon"),
   btnShare: document.getElementById("btn-share"),
+  btnStory: document.getElementById("btn-story"),
+  storyHint: document.getElementById("story-hint"),
   shareMenu: document.getElementById("share-menu"),
   shareWa: document.getElementById("share-wa"),
   shareFb: document.getElementById("share-fb"),
@@ -445,6 +447,7 @@ function showResult(score) {
   lastResult = { score: score, title: tier.title };
   els.shareMenu.classList.add("hidden");
   els.copyOk.classList.add("hidden");
+  els.storyHint.classList.add("hidden");
 
   // Marcador en la escala (1 -> 0%, 10 -> 100%)
   const pct = ((score - 1) / 9) * 100;
@@ -517,6 +520,143 @@ async function copyShareText() {
     document.body.removeChild(ta);
   }
   els.copyOk.classList.remove("hidden");
+}
+
+/* -----------------------------------------------------------
+   7c) IMAGEN PARA INSTAGRAM STORIES (1080 x 1920)
+   Dibuja una tarjeta vertical con el resultado y la comparte
+   como archivo (o la descarga si el dispositivo no permite
+   compartir imágenes).
+----------------------------------------------------------- */
+function makeStoryBlob() {
+  return new Promise((resolve) => {
+    const W = 1080, H = 1920;
+    const canvas = document.createElement("canvas");
+    canvas.width = W; canvas.height = H;
+    const x = canvas.getContext("2d");
+
+    // Fondo crema con leve degradado
+    const bg = x.createLinearGradient(0, 0, 0, H);
+    bg.addColorStop(0, "#ddd8c9");
+    bg.addColorStop(1, "#e9e6dc");
+    x.fillStyle = bg;
+    x.fillRect(0, 0, W, H);
+
+    // Marco retro
+    x.strokeStyle = "#2e3a36";
+    x.lineWidth = 10;
+    x.strokeRect(60, 60, W - 120, H - 120);
+
+    x.textAlign = "center";
+
+    // Etiqueta superior
+    x.fillStyle = "#5c6b64";
+    x.font = "bold 38px 'Courier New', monospace";
+    x.fillText("T E S T   D E   P E R S O N A L I D A D", W / 2, 230);
+
+    // Título
+    x.fillStyle = "#2e4a45";
+    x.font = "bold 78px 'Courier New', monospace";
+    x.fillText("¿Qué personalidad", W / 2, 360);
+    x.fillText("tienes?", W / 2, 450);
+
+    // Saludo con nombre (si lo hay)
+    if (playerName) {
+      x.fillStyle = "#2e3a36";
+      x.font = "bold 56px 'Courier New', monospace";
+      x.fillText(playerName, W / 2, 600);
+    }
+
+    // Círculo de puntuación
+    const cx = W / 2, cy = 880, r = 250;
+    x.beginPath();
+    x.arc(cx, cy, r, 0, Math.PI * 2);
+    x.fillStyle = "#f4f2ea";
+    x.fill();
+    x.lineWidth = 12;
+    x.strokeStyle = "#2e3a36";
+    x.stroke();
+    x.fillStyle = "#2e4a45";
+    x.font = "bold 230px 'Courier New', monospace";
+    x.textBaseline = "middle";
+    x.fillText(String(lastResult.score), cx, cy - 10);
+    x.font = "bold 60px 'Courier New', monospace";
+    x.fillStyle = "#5c6b64";
+    x.fillText("/ 10", cx, cy + 150);
+    x.textBaseline = "alphabetic";
+
+    // Perfil (título del resultado)
+    x.fillStyle = "#2e4a45";
+    x.font = "bold 62px 'Courier New', monospace";
+    x.fillText(lastResult.title, W / 2, 1300);
+
+    // Barra de escala con degradado
+    const bx = 160, bw = W - 320, by = 1420, bh = 26;
+    const grad = x.createLinearGradient(bx, 0, bx + bw, 0);
+    grad.addColorStop(0, "#7aa0c4");
+    grad.addColorStop(0.5, "#6f9b8f");
+    grad.addColorStop(1, "#c98b6b");
+    x.fillStyle = grad;
+    x.fillRect(bx, by, bw, bh);
+    x.strokeStyle = "#2e3a36";
+    x.lineWidth = 4;
+    x.strokeRect(bx, by, bw, bh);
+    // Marcador
+    const mx = bx + ((lastResult.score - 1) / 9) * bw;
+    x.fillStyle = "#2e3a36";
+    x.fillRect(mx - 5, by - 18, 10, bh + 36);
+    // Etiquetas de la escala
+    x.fillStyle = "#5c6b64";
+    x.font = "32px 'Courier New', monospace";
+    x.textAlign = "left";   x.fillText("Abusado", bx, by + 90);
+    x.textAlign = "center"; x.fillText("Equilibrio", W / 2, by + 90);
+    x.textAlign = "right";  x.fillText("Abusador", bx + bw, by + 90);
+
+    // Llamado a la acción
+    x.textAlign = "center";
+    x.fillStyle = "#2e4a45";
+    x.font = "bold 46px 'Courier New', monospace";
+    x.fillText("¿Y tú qué personalidad tienes?", W / 2, 1640);
+
+    // Enlace
+    x.fillStyle = "#4a6f8a";
+    x.font = "bold 40px 'Courier New', monospace";
+    x.fillText("👉 mariscosjasu.github.io/qpt", W / 2, 1730);
+
+    canvas.toBlob((b) => resolve(b), "image/png");
+  });
+}
+
+async function shareStory() {
+  els.storyHint.classList.add("hidden");
+  const blob = await makeStoryBlob();
+  if (!blob) return;
+  const file = new File([blob], "mi-personalidad.png", { type: "image/png" });
+
+  // 1) Intentar compartir la imagen (en móvil aparece "Instagram Stories")
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try {
+      await navigator.share({
+        files: [file],
+        title: "¿Qué personalidad tienes?",
+        text: buildShareText() + " " + SHARE_URL,
+      });
+      return;
+    } catch (e) {
+      // cancelado o no permitido -> descargamos
+    }
+  }
+
+  // 2) Fallback: descargar la imagen para subirla manualmente a la historia
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "mi-personalidad.png";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  els.storyHint.classList.remove("hidden");
 }
 
 /* -----------------------------------------------------------
@@ -670,6 +810,7 @@ els.btnHome.addEventListener("click", () => {
 
 els.btnShare.addEventListener("click", () => { shareResult(); });
 els.btnCopy.addEventListener("click", () => { copyShareText(); });
+els.btnStory.addEventListener("click", () => { shareStory(); });
 
 els.soundToggle.addEventListener("click", () => {
   initAudio();
