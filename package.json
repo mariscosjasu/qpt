@@ -1,0 +1,19 @@
+{
+  "name": "qpt",
+  "version": "1.0.0",
+  "private": true,
+  "description": "¿Qué personalidad tienes? — quiz PWA empaquetable como APK con Capacitor",
+  "scripts": {
+    "copy:web": "node scripts/copy-web.mjs",
+    "add:android": "npm run copy:web && cap add android",
+    "sync": "npm run copy:web && cap sync android",
+    "build:apk": "npm run sync && cd android && ./gradlew assembleDebug"
+  },
+  "dependencies": {
+    "@capacitor/android": "8.4.1",
+    "@capacitor/core": "8.4.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "8.4.1"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "appId": "com.mariscosjasu.qpt",
+  "appName": "Personalidad",
+  "webDir": "www",
+  "android": {
+    "backgroundColor": "#e9e6dc"
+  }
+}

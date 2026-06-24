@@ -1,0 +1,48 @@
+name: Compilar APK (Capacitor)
+
+# Se ejecuta SOLO cuando tú lo lanzas manualmente desde la pestaña "Actions".
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Instalar dependencias
+        run: npm install
+
+      - name: Copiar la web a www/
+        run: npm run copy:web
+
+      - name: Configurar Java (JDK 21)
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "21"
+
+      - name: Crear proyecto Android
+        run: npx cap add android
+
+      - name: Sincronizar
+        run: npx cap sync android
+
+      - name: Compilar APK (debug)
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - name: Subir el APK como artefacto descargable
+        uses: actions/upload-artifact@v4
+        with:
+          name: qpt-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error

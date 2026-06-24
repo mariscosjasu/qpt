@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.github.mariscosjasu.twa",
+      "sha256_cert_fingerprints": [
+        "17:21:64:67:45:42:83:7D:69:BB:2E:77:00:7D:54:50:55:48:BF:B8:D0:29:8D:D2:CF:6C:38:0B:87:F8:02:3B"
+      ]
+    }
+  }
+]

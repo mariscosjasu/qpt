@@ -1,0 +1,16 @@
+# Dependencias
+node_modules/
+
+# Carpeta generada para empaquetar el APK (se regenera con npm run copy:web)
+www/
+
+# Proyecto Android generado por Capacitor (se regenera en cada build / CI)
+android/
+
+# Artefactos de compilación
+*.apk
+*.aab
+
+# Varios
+.DS_Store
+*.log
