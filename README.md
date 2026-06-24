@@ -10,9 +10,9 @@ abuso* (10), pasando por un punto sano de **equilibrio/asertividad** en el centr
 
 ## Características
 
-- 🎯 **Preguntas aleatorias**: cada partida elige **15 preguntas al azar** de un
-  **banco de 36** (de texto y de imágenes), y baraja también el orden de las opciones.
-  Así rara vez una sesión es igual a otra.
+- 🎯 **25 fases por partida**, elegidas al azar de un **banco de 45 preguntas**
+  (de texto y de imágenes). También se baraja el orden de las preguntas y de sus
+  opciones, así rara vez una sesión es igual a otra.
 - 🧮 **Puntuación del 1 al 10** con 5 perfiles de resultado.
 - 🎨 Estilo **retro minimalista** (paleta calmada tipo terapia, tipografía monoespaciada).
 - 🔊 **Sonidos de calma** generados en el dispositivo (ambiente relajante + tonos suaves).
@@ -76,8 +76,9 @@ Al ser una PWA, puedes empaquetarla en un APK sin reescribir nada:
 ## Personalizar las preguntas
 
 Todas las preguntas están en el arreglo `QUESTION_POOL` dentro de `app.js`. En cada
-partida se eligen al azar `SESSION_SIZE` preguntas (15 por defecto) y se barajan sus
+partida se eligen al azar `SESSION_SIZE` preguntas (25 por defecto) y se barajan sus
 opciones. Para que salgan más o menos preguntas por partida, cambia `SESSION_SIZE`.
+Para dar más variedad a futuras partidas, simplemente agrega más preguntas al banco.
 
 Cada opción tiene un `value`:
 

@@ -200,6 +200,51 @@ const QUESTION_POOL = [
     { img: "🌅", label: "Amanecer", value: 1 },
     { img: "🌋", label: "Volcán", value: 2 },
   ]},
+  { type: "text", q: "Cuando algo te molesta de otra persona...", options: [
+    { text: "Me lo guardo y lo aguanto.", value: 0 },
+    { text: "Se lo digo con respeto.", value: 1 },
+    { text: "Se lo echo en cara con dureza.", value: 2 },
+  ]},
+  { type: "text", q: "Si te toca liderar un grupo...", options: [
+    { text: "Prefiero que mande otra persona.", value: 0 },
+    { text: "Coordino escuchando a todos.", value: 1 },
+    { text: "Doy órdenes y espero que obedezcan.", value: 2 },
+  ]},
+  { type: "text", q: "Cuando alguien comete un error que te afecta...", options: [
+    { text: "Asumo yo la culpa para no incomodar.", value: 0 },
+    { text: "Lo resuelvo y hablo del tema con calma.", value: 1 },
+    { text: "Lo regaño delante de los demás.", value: 2 },
+  ]},
+  { type: "text", q: "Frente a alguien que se muestra inseguro...", options: [
+    { text: "Me identifico y me retraigo yo también.", value: 0 },
+    { text: "Intento darle confianza.", value: 1 },
+    { text: "Aprovecho para tomar el control.", value: 2 },
+  ]},
+  { type: "text", q: "Cuando pierdes en un juego o competencia...", options: [
+    { text: "Siento que no valgo lo suficiente.", value: 0 },
+    { text: "Lo acepto y felicito al otro.", value: 1 },
+    { text: "Me enojo y busco culpables.", value: 2 },
+  ]},
+  { type: "image", q: "¿Qué símbolo te representa?", options: [
+    { img: "🕊️", label: "Paloma / paz", value: 0 },
+    { img: "🌳", label: "Árbol / firmeza", value: 1 },
+    { img: "🔥", label: "Fuego / dominio", value: 2 },
+  ]},
+  { type: "image", q: "Elige una máscara:", options: [
+    { img: "😔", label: "Cabizbajo", value: 0 },
+    { img: "😌", label: "En paz", value: 1 },
+    { img: "😏", label: "Astuto", value: 2 },
+  ]},
+  { type: "image", q: "En una foto de grupo eliges...", options: [
+    { img: "🙈", label: "Esconderme", value: 0 },
+    { img: "😊", label: "Salir natural", value: 1 },
+    { img: "🤳", label: "Ser el protagonista", value: 2 },
+  ]},
+  { type: "image", q: "Elige un sonido:", options: [
+    { img: "🔇", label: "Silencio", value: 0 },
+    { img: "🎵", label: "Melodía", value: 1 },
+    { img: "📢", label: "Megáfono", value: 2 },
+  ]},
 ];
 
 /* -----------------------------------------------------------
@@ -231,7 +276,7 @@ const RESULTS = [
 /* -----------------------------------------------------------
    3) ESTADO DEL JUEGO
 ----------------------------------------------------------- */
-const SESSION_SIZE = 15;    // preguntas por partida (elegidas al azar del banco)
+const SESSION_SIZE = 25;    // preguntas por partida (elegidas al azar del banco)
 let questions = [];         // preguntas activas de esta partida
 let current = 0;            // índice de pregunta actual
 let answers = [];           // respuestas elegidas
