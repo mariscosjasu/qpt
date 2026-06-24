@@ -35,6 +35,12 @@
           <span>Tu último resultado: <strong id="best-score-value">—</strong>/10</span>
         </div>
 
+        <div class="name-field">
+          <label for="player-name" class="name-label">Tu nombre (opcional)</label>
+          <input id="player-name" class="name-input" type="text" maxlength="20"
+                 placeholder="Escribe tu nombre" autocomplete="given-name" />
+        </div>
+
         <button id="btn-start" class="btn btn-primary">Comenzar</button>
 
         <p class="disclaimer">
@@ -65,7 +71,7 @@
     <!-- PANTALLA DE RESULTADO -->
     <section id="screen-result" class="screen">
       <div class="card">
-        <p class="result-label">Tu resultado</p>
+        <p class="result-label" id="result-label">Tu resultado</p>
         <div class="score-circle">
           <span id="result-score">5</span><small>/10</small>
         </div>

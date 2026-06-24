@@ -16,6 +16,8 @@ abuso* (10), pasando por un punto sano de **equilibrio/asertividad** en el centr
 - 🧮 **Puntuación del 1 al 10** con 5 perfiles de resultado.
 - 🎨 Estilo **retro minimalista** (paleta calmada tipo terapia, tipografía monoespaciada).
 - 🔊 **Sonidos de calma** generados en el dispositivo (ambiente relajante + tonos suaves).
+- 👤 **Nombre personalizado** (opcional): al inicio se puede escribir el nombre; el
+  resultado y el texto para compartir quedan personalizados (se recuerda en el dispositivo).
 - 💾 **Guarda tu último resultado** en el dispositivo (`localStorage`).
 - 📣 **Compartir resultado** en redes (WhatsApp, Facebook, X, Telegram, Instagram vía
   compartir nativo del móvil) con un texto que promociona el juego e incluye el enlace.

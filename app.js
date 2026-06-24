@@ -281,6 +281,10 @@ let questions = [];         // preguntas activas de esta partida
 let current = 0;            // índice de pregunta actual
 let answers = [];           // respuestas elegidas
 const STORAGE_KEY = "qpt_last_score";
+const STORAGE_NAME = "qpt_name";
+
+// Nombre del jugador (para personalizar resultado y compartir)
+let playerName = "";
 
 // URL pública del juego (se usa al compartir para promocionarlo)
 const SHARE_URL = "https://mariscosjasu.github.io/qpt/";
@@ -332,6 +336,8 @@ const els = {
   scaleMarker: document.getElementById("scale-marker"),
   bestScore: document.getElementById("best-score"),
   bestScoreValue: document.getElementById("best-score-value"),
+  playerName: document.getElementById("player-name"),
+  resultLabel: document.getElementById("result-label"),
   soundToggle: document.getElementById("sound-toggle"),
   soundIcon: document.getElementById("sound-icon"),
   btnShare: document.getElementById("btn-share"),
@@ -430,6 +436,11 @@ function showResult(score) {
   els.resultDesc.textContent = tier.desc;
   els.resultAdvice.textContent = tier.advice;
 
+  // Encabezado personalizado con el nombre, si lo hay
+  els.resultLabel.textContent = playerName
+    ? playerName + ", tu resultado es"
+    : "Tu resultado";
+
   // Guardamos el resultado para compartir y preparamos los enlaces
   lastResult = { score: score, title: tier.title };
   els.shareMenu.classList.add("hidden");
@@ -447,6 +458,13 @@ function showResult(score) {
    7b) COMPARTIR RESULTADO (promociona el juego)
 ----------------------------------------------------------- */
 function buildShareText() {
+  if (playerName) {
+    return (
+      playerName + " obtuvo " + lastResult.score + "/10 en " +
+      "\"¿Qué personalidad tienes?\": " + lastResult.title + ". " +
+      "¿Y tú qué personalidad tienes? Descúbrelo aquí 👉"
+    );
+  }
   return (
     "Mi resultado en \"¿Qué personalidad tienes?\" fue " +
     lastResult.score + "/10: " + lastResult.title + ". " +
@@ -628,6 +646,8 @@ els.btnStart.addEventListener("click", () => {
   initAudio();
   if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
   startAmbient();
+  playerName = (els.playerName.value || "").trim();
+  try { localStorage.setItem(STORAGE_NAME, playerName); } catch (e) {}
   buildSession();
   renderQuestion();
   showScreen("quiz");
@@ -663,6 +683,10 @@ els.soundToggle.addEventListener("click", () => {
 ----------------------------------------------------------- */
 (function init() {
   loadBestScore();
+  try {
+    const savedName = localStorage.getItem(STORAGE_NAME);
+    if (savedName) { playerName = savedName; els.playerName.value = savedName; }
+  } catch (e) {}
   try {
     const s = localStorage.getItem("qpt_sound");
     if (s === "0") { soundOn = false; els.soundToggle.classList.add("muted"); els.soundIcon.textContent = "✕"; }
