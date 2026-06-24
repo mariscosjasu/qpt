@@ -1,6 +1,6 @@
 /* Service Worker — permite que el juego funcione sin internet (offline) */
 
-const CACHE = "qpt-cache-v1";
+const CACHE = "qpt-cache-v2";
 const ASSETS = [
   "./",
   "./index.html",
@@ -28,9 +28,12 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-// Fetch: primero caché, luego red (cache-first)
+// Fetch: primero caché, luego red (cache-first). Solo gestionamos peticiones
+// del propio sitio; las externas (p.ej. Cloudflare Analytics) van directas a la red.
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  const url = new URL(event.request.url);
+  if (url.origin !== self.location.origin) return; // dejar pasar peticiones externas
   event.respondWith(
     caches.match(event.request).then((cached) => {
       return (
