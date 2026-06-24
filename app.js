@@ -7,7 +7,7 @@
        2 = Asertivo / equilibrado      (lo hablo con calma, pongo límites)
        3 = Dominar / imponer           (tomo el control, me impongo)
        4 = Atacar / humillar           (respondo peor, lo hago sentir mal)
-   - Resultado normalizado del 1 al 10
+   - Resultado normalizado del 1 al 100
    - Sonidos de calma con Web Audio (sin archivos, funciona offline)
    - Guarda el último resultado en el dispositivo (localStorage)
    =========================================================== */
@@ -264,23 +264,23 @@ const QUESTION_POOL = [
    2) RESULTADOS por tramos (escala 1 a 10)
 ----------------------------------------------------------- */
 const RESULTS = [
-  { min: 1, max: 2,
+  { min: 1, max: 20,
     title: "Muy complaciente",
     desc: "Sueles ponerte en último lugar: te disculpas aunque no sea tu culpa, cedes casi siempre y te cuesta mucho defender lo que sientes. Eso puede dejarte expuesto a que se aprovechen de ti.",
     advice: "Consejo: empieza por límites pequeños. Tu opinión y tus necesidades también importan; decir \"no\" no te hace mala persona." },
-  { min: 3, max: 4,
+  { min: 21, max: 40,
     title: "Evitativo / pasivo",
     desc: "Tu forma de protegerte es evitar: te quedas en blanco, lo ignoras o te alejas cuando algo te incomoda. No buscas dañar a nadie, pero al no expresar lo que sientes, los problemas suelen quedar sin resolver.",
     advice: "Consejo: practica decir lo que piensas en el momento, aunque sea con una frase corta y tranquila. Evitar el conflicto no es lo mismo que resolverlo." },
-  { min: 5, max: 6,
+  { min: 41, max: 60,
     title: "Equilibrado y asertivo",
     desc: "Sabes escuchar y también defenderte. Hablas con calma, pones límites con respeto y buscas acuerdos justos. Es el punto más sano del espectro: ni te dejas pisar ni pisas a otros.",
     advice: "Consejo: mantén ese equilibrio. Sigue cuidando tanto tus límites como la empatía hacia los demás." },
-  { min: 7, max: 8,
+  { min: 61, max: 80,
     title: "Tiendes a dominar",
     desc: "Te gusta tener el control y a veces impones tu voluntad por encima de la de los demás. La firmeza es una virtud, pero cuidado con cruzar la línea hacia la imposición.",
     advice: "Consejo: escucha antes de responder. El liderazgo sano convence y suma, no avasalla." },
-  { min: 9, max: 10,
+  { min: 81, max: 100,
     title: "Muy 'bully'",
     desc: "Tiendes a imponerte, ganar a costa de otros y restar importancia a sus sentimientos. Estas conductas pueden dañar tus relaciones y a las personas a tu alrededor.",
     advice: "Consejo: trabajar la empatía puede cambiar vidas, incluida la tuya. Antes de actuar, pregúntate cómo se sentiría el otro." },
@@ -433,9 +433,9 @@ function computeScore() {
     if (optIndex !== null) sum += questions[qIndex].options[optIndex].value;
   });
   const maxSum = questions.length * 4; // cada pregunta máximo 4
-  let score = Math.round(1 + (sum / maxSum) * 9);
+  let score = Math.round((sum / maxSum) * 100);
   if (score < 1) score = 1;
-  if (score > 10) score = 10;
+  if (score > 100) score = 100;
   return score;
 }
 
@@ -463,8 +463,8 @@ function showResult(score) {
   els.copyOk.classList.add("hidden");
   els.storyHint.classList.add("hidden");
 
-  // Marcador en la escala (1 -> 0%, 10 -> 100%)
-  const pct = ((score - 1) / 9) * 100;
+  // Marcador en la escala (1 -> 0%, 100 -> 100%)
+  const pct = ((score - 1) / 99) * 100;
   els.scaleMarker.style.left = pct + "%";
 
   showScreen("result");
@@ -477,14 +477,14 @@ function showResult(score) {
 function buildShareText() {
   if (playerName) {
     return (
-      playerName + " obtuvo " + lastResult.score + "/10 en " +
+      playerName + " obtuvo " + lastResult.score + "/100 en " +
       "\"¿Qué personalidad tienes?\": " + lastResult.title + ". " +
       "¿Y tú qué personalidad tienes? Descúbrelo aquí 👉"
     );
   }
   return (
     "Mi resultado en \"¿Qué personalidad tienes?\" fue " +
-    lastResult.score + "/10: " + lastResult.title + ". " +
+    lastResult.score + "/100: " + lastResult.title + ". " +
     "¿Y tú qué personalidad tienes? Descúbrelo aquí 👉"
   );
 }
@@ -596,12 +596,12 @@ function makeStoryBlob() {
     x.strokeStyle = "#2e3a36";
     x.stroke();
     x.fillStyle = "#2e4a45";
-    x.font = "bold 230px 'Courier New', monospace";
+    x.font = "bold 190px 'Courier New', monospace";
     x.textBaseline = "middle";
     x.fillText(String(lastResult.score), cx, cy - 10);
-    x.font = "bold 60px 'Courier New', monospace";
+    x.font = "bold 56px 'Courier New', monospace";
     x.fillStyle = "#5c6b64";
-    x.fillText("/ 10", cx, cy + 150);
+    x.fillText("/ 100", cx, cy + 150);
     x.textBaseline = "alphabetic";
 
     // Perfil (título del resultado)
@@ -621,7 +621,7 @@ function makeStoryBlob() {
     x.lineWidth = 4;
     x.strokeRect(bx, by, bw, bh);
     // Marcador
-    const mx = bx + ((lastResult.score - 1) / 9) * bw;
+    const mx = bx + ((lastResult.score - 1) / 99) * bw;
     x.fillStyle = "#2e3a36";
     x.fillRect(mx - 5, by - 18, 10, bh + 36);
     // Etiquetas de la escala

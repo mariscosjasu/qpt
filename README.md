@@ -1,8 +1,8 @@
 # ¿Qué personalidad tienes?
 
-Un **test de autorreflexión** tipo quiz que estima, en una escala del **1 al 10**, tu
+Un **test de autorreflexión** tipo quiz que estima, en una escala del **1 al 100**, tu
 tendencia en situaciones sociales: desde *permitir el abuso* (1) hasta *ejercer el
-abuso* (10), pasando por un punto sano de **equilibrio/asertividad** en el centro.
+abuso* (100), pasando por un punto sano de **equilibrio/asertividad** en el centro.
 
 > ⚠️ **Aviso:** Este test es solo para reflexión personal y entretenimiento. **No es un
 > diagnóstico psicológico.** Si tú o alguien que conoces sufre violencia o acoso, busca
@@ -16,7 +16,7 @@ abuso* (10), pasando por un punto sano de **equilibrio/asertividad** en el centr
 - 🧠 **5 opciones por pregunta** basadas en los estilos reales de respuesta ante el
   conflicto (someterse, evitar/quedarse en blanco, ser asertivo, dominar, atacar),
   para que ninguna respuesta se sienta ambigua.
-- 🧮 **Puntuación del 1 al 10** con 5 perfiles de resultado.
+- 🧮 **Puntuación del 1 al 100** con 5 perfiles de resultado.
 - 🎨 Estilo **retro minimalista** (paleta calmada tipo terapia, tipografía monoespaciada).
 - 🔊 **Sonidos de calma** generados en el dispositivo (ambiente relajante + tonos suaves).
 - 👤 **Nombre personalizado** (opcional): al inicio se puede escribir el nombre; el

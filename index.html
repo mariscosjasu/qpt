@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#2e4a45" />
-  <meta name="description" content="Un cuestionario de autorreflexión que estima tu tendencia en situaciones sociales, en una escala del 1 al 10." />
+  <meta name="description" content="Un cuestionario de autorreflexión que estima tu tendencia en situaciones sociales, en una escala del 1 al 100." />
   <title>¿Qué personalidad tienes?</title>
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icons/icon-192.png" />
@@ -27,12 +27,12 @@
         <p class="intro">
           Responde con sinceridad unas preguntas sobre cómo actúas en
           situaciones sociales. Al final obtendrás un resultado del
-          <strong>1 al 10</strong> que estima tu tendencia: desde
+          <strong>1 al 100</strong> que estima tu tendencia: desde
           <em>permitir el abuso</em> hasta <em>ejercer el abuso</em>.
         </p>
 
         <div id="best-score" class="best-score hidden">
-          <span>Tu último resultado: <strong id="best-score-value">—</strong>/10</span>
+          <span>Tu último resultado: <strong id="best-score-value">—</strong>/100</span>
         </div>
 
         <div class="name-field">
@@ -57,7 +57,7 @@
       <div class="card">
         <div class="progress">
           <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
-          <span id="progress-text" class="progress-text">1 / 10</span>
+          <span id="progress-text" class="progress-text">1 / 25</span>
         </div>
 
         <h2 id="question-text" class="question"></h2>
@@ -73,7 +73,7 @@
       <div class="card">
         <p class="result-label" id="result-label">Tu resultado</p>
         <div class="score-circle">
-          <span id="result-score">5</span><small>/10</small>
+          <span id="result-score">50</span><small>/100</small>
         </div>
 
         <div class="scale">
