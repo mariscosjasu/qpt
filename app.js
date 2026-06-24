@@ -664,9 +664,10 @@ async function shareStory() {
         text: buildShareText() + " " + SHARE_URL,
       });
       els.storyHint.innerHTML =
-        'Para que entren con un toque: en tu historia agrega el sticker ' +
-        '<strong>"Enlace"</strong> y pega la dirección (ya la copiamos por ti) 👉 ' +
-        SHARE_URL_CORTA;
+        '¡Listo! El enlace ya está copiado 📋. Para que entren con un toque: en ' +
+        'historias de <strong>Instagram, Facebook o Snapchat</strong> agrégalo con el ' +
+        'sticker <strong>"Enlace"</strong>; en <strong>X o WhatsApp</strong> pégalo en ' +
+        'tu publicación. 👉 ' + SHARE_URL_CORTA;
       els.storyHint.classList.remove("hidden");
       return;
     } catch (e) {
@@ -684,9 +685,9 @@ async function shareStory() {
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
   els.storyHint.innerHTML =
-    'Imagen descargada 📥. Súbela a tu historia y agrega el sticker ' +
-    '<strong>"Enlace"</strong> con esta dirección (ya la copiamos por ti): ' +
-    SHARE_URL_CORTA;
+    'Imagen descargada 📥 y enlace copiado 📋. Súbela a tu historia y pega el enlace ' +
+    'con el sticker <strong>"Enlace"</strong> (Instagram, Facebook, Snapchat) o pégalo ' +
+    'en tu publicación (X, WhatsApp): ' + SHARE_URL_CORTA;
   els.storyHint.classList.remove("hidden");
 }
 
