@@ -407,24 +407,113 @@ body {
   margin-top: 8px;
 }
 
-/* ---------- Botón sonido ---------- */
-.sound-toggle {
+/* ---------- Controles superiores (tema, sonido, volumen) ---------- */
+.top-controls {
   position: fixed;
   top: 14px;
   right: 14px;
-  width: 44px;
-  height: 44px;
-  border: 2px solid var(--ink);
-  border-radius: 50%;
-  background: var(--card);
-  color: var(--ink);
-  font-size: 1.2rem;
-  cursor: pointer;
   z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--card);
+  border: 2px solid var(--ink);
+  border-radius: 24px;
+  padding: 5px 10px 5px 6px;
   box-shadow: 3px 3px 0 var(--shadow);
 }
-.sound-toggle.muted { opacity: 0.45; }
-.sound-toggle:active { transform: translate(1px, 1px); }
+.ctrl-btn {
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink);
+  font-size: 1.15rem;
+  cursor: pointer;
+  transition: transform 0.08s ease, opacity 0.2s;
+}
+.ctrl-btn:active { transform: scale(0.92); }
+.ctrl-btn.muted { opacity: 0.4; }
+.volume-slider {
+  width: 80px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
 
+/* ---------- Botón sonido ---------- */
 /* ---------- Utilidades ---------- */
 .hidden { display: none !important; }
+
+
+/* ===========================================================
+   AÑADIDOS: modo oscuro, animaciones, recursos de ayuda, a11y
+   =========================================================== */
+
+/* ---------- Modo oscuro ---------- */
+[data-theme="dark"] {
+  --bg: #1b231f;
+  --bg-2: #232d28;
+  --ink: #e7e3d7;
+  --ink-soft: #a9b2aa;
+  --accent: #6f9b8f;
+  --accent-dark: #9cc3b6;
+  --line: #3b453e;
+  --card: #232d28;
+  --shadow: rgba(0, 0, 0, 0.45);
+  --bully: #d49b7c;
+}
+body { transition: background-color 0.3s ease, color 0.3s ease; }
+
+/* ---------- Recursos de ayuda ---------- */
+.help-box {
+  text-align: left;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  background: var(--bg-2);
+  border: 1px dashed var(--line);
+  border-radius: 4px;
+  padding: 10px 12px;
+  margin: 10px 0;
+}
+.help-box summary {
+  cursor: pointer;
+  font-weight: bold;
+  color: var(--accent-dark);
+  letter-spacing: 0.5px;
+}
+.help-box ul {
+  margin: 8px 0 6px;
+  padding-left: 18px;
+}
+.help-box li { margin-bottom: 4px; }
+.help-note { font-size: 0.78rem; color: var(--ink-soft); margin-top: 6px; }
+
+/* ---------- Animaciones ---------- */
+@keyframes pop {
+  0% { transform: scale(0.7); opacity: 0; }
+  70% { transform: scale(1.08); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+#screen-result.active .score-circle { animation: pop 0.5s ease both; }
+.answer { animation: slideUp 0.32s ease both; }
+.answers .answer:nth-child(2) { animation-delay: 0.05s; }
+.answers .answer:nth-child(3) { animation-delay: 0.1s; }
+.answers .answer:nth-child(4) { animation-delay: 0.15s; }
+.answers .answer:nth-child(5) { animation-delay: 0.2s; }
+
+/* ---------- Accesibilidad ---------- */
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

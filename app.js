@@ -354,6 +354,9 @@ const els = {
   resultLabel: document.getElementById("result-label"),
   soundToggle: document.getElementById("sound-toggle"),
   soundIcon: document.getElementById("sound-icon"),
+  themeToggle: document.getElementById("theme-toggle"),
+  themeIcon: document.getElementById("theme-icon"),
+  volumeSlider: document.getElementById("volume-slider"),
   btnShare: document.getElementById("btn-share"),
   btnStory: document.getElementById("btn-story"),
   storyHint: document.getElementById("story-hint"),
@@ -717,6 +720,7 @@ let audioCtx = null;
 let masterGain = null;
 let ambientStarted = false;
 let soundOn = true;
+let volume = 0.6;           // 0.0 a 1.0 (control de volumen)
 
 function initAudio() {
   if (audioCtx) return;
@@ -724,7 +728,7 @@ function initAudio() {
   if (!AC) return;
   audioCtx = new AC();
   masterGain = audioCtx.createGain();
-  masterGain.gain.value = soundOn ? 0.6 : 0.0;
+  masterGain.gain.value = soundOn ? volume : 0.0;
   masterGain.connect(audioCtx.destination);
 }
 
@@ -804,11 +808,32 @@ function toggleSound() {
     const t = audioCtx.currentTime;
     masterGain.gain.cancelScheduledValues(t);
     masterGain.gain.setValueAtTime(masterGain.gain.value, t);
-    masterGain.gain.linearRampToValueAtTime(soundOn ? 0.6 : 0.0, t + 0.3);
+    masterGain.gain.linearRampToValueAtTime(soundOn ? volume : 0.0, t + 0.3);
   }
   els.soundToggle.classList.toggle("muted", !soundOn);
   els.soundIcon.textContent = soundOn ? "♪" : "✕";
   try { localStorage.setItem("qpt_sound", soundOn ? "1" : "0"); } catch (e) {}
+}
+
+// Aplica el volumen (0.0 a 1.0) y lo recuerda
+function applyVolume(v) {
+  volume = Math.min(1, Math.max(0, v));
+  if (masterGain && soundOn) {
+    const t = audioCtx.currentTime;
+    masterGain.gain.cancelScheduledValues(t);
+    masterGain.gain.setValueAtTime(masterGain.gain.value, t);
+    masterGain.gain.linearRampToValueAtTime(volume, t + 0.15);
+  }
+  try { localStorage.setItem("qpt_volume", String(Math.round(volume * 100))); } catch (e) {}
+}
+
+// Cambia entre modo claro y oscuro y lo recuerda
+function setTheme(dark) {
+  document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+  if (els.themeIcon) els.themeIcon.textContent = dark ? "☀️" : "🌙";
+  const tc = document.querySelector('meta[name="theme-color"]');
+  if (tc) tc.setAttribute("content", dark ? "#1b231f" : "#2e4a45");
+  try { localStorage.setItem("qpt_theme", dark ? "dark" : "light"); } catch (e) {}
 }
 
 /* -----------------------------------------------------------
@@ -851,11 +876,29 @@ els.soundToggle.addEventListener("click", () => {
   toggleSound();
 });
 
+els.themeToggle.addEventListener("click", () => {
+  const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+  setTheme(!isDark);
+});
+
+els.volumeSlider.addEventListener("input", () => {
+  applyVolume(parseInt(els.volumeSlider.value, 10) / 100);
+});
+
 /* -----------------------------------------------------------
    11) INICIALIZACIÓN
 ----------------------------------------------------------- */
 (function init() {
   loadBestScore();
+  try {
+    const savedTheme = localStorage.getItem("qpt_theme");
+    const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setTheme(savedTheme ? savedTheme === "dark" : !!prefersDark);
+  } catch (e) {}
+  try {
+    const v = localStorage.getItem("qpt_volume");
+    if (v !== null) { volume = parseInt(v, 10) / 100; if (els.volumeSlider) els.volumeSlider.value = v; }
+  } catch (e) {}
   try {
     const savedName = localStorage.getItem(STORAGE_NAME);
     if (savedName) { playerName = savedName; els.playerName.value = savedName; }

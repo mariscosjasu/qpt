@@ -6,16 +6,37 @@
   <meta name="theme-color" content="#2e4a45" />
   <meta name="description" content="Un cuestionario de autorreflexión que estima tu tendencia en situaciones sociales, en una escala del 1 al 100." />
   <title>¿Qué personalidad tienes?</title>
+
+  <!-- Open Graph / redes sociales (para que el enlace se vea bien al compartir) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="¿Qué personalidad tienes?" />
+  <meta property="og:title" content="¿Qué personalidad tienes? — Test de autorreflexión" />
+  <meta property="og:description" content="Descubre tu tendencia en situaciones sociales en una escala del 1 al 100. ¿Y tú qué personalidad tienes?" />
+  <meta property="og:url" content="https://appsmx.github.io/qpt/" />
+  <meta property="og:image" content="https://appsmx.github.io/qpt/icons/icon-512.png" />
+  <meta property="og:locale" content="es_MX" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="¿Qué personalidad tienes?" />
+  <meta name="twitter:description" content="Descubre tu tendencia en situaciones sociales. ¿Y tú qué personalidad tienes?" />
+  <meta name="twitter:image" content="https://appsmx.github.io/qpt/icons/icon-512.png" />
+
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icons/icon-192.png" />
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Botón de sonido (siempre visible) -->
-  <button id="sound-toggle" class="sound-toggle" aria-label="Activar o desactivar sonido" title="Sonido">
-    <span id="sound-icon">♪</span>
-  </button>
+  <!-- Controles superiores: tema, sonido y volumen -->
+  <div class="top-controls">
+    <button id="theme-toggle" class="ctrl-btn" aria-label="Cambiar entre modo claro y oscuro" title="Tema claro/oscuro">
+      <span id="theme-icon">🌙</span>
+    </button>
+    <button id="sound-toggle" class="ctrl-btn" aria-label="Activar o desactivar sonido" title="Sonido">
+      <span id="sound-icon">♪</span>
+    </button>
+    <input id="volume-slider" class="volume-slider" type="range" min="0" max="100" value="60"
+           aria-label="Volumen de la música" title="Volumen" />
+  </div>
 
   <main class="app">
 
@@ -85,9 +106,25 @@
           </div>
         </div>
 
-        <h2 id="result-title" class="result-title"></h2>
+        <h2 id="result-title" class="result-title" aria-live="polite"></h2>
         <p id="result-desc" class="result-desc"></p>
         <p id="result-advice" class="result-advice"></p>
+
+        <details class="help-box">
+          <summary>¿Necesitas ayuda? Recursos de apoyo</summary>
+          <p>
+            Este test es solo para reflexión y entretenimiento; <strong>no es un
+            diagnóstico</strong>. Si tú o alguien que conoces vive violencia, acoso o
+            malestar emocional, no estás solo y puedes pedir ayuda:
+          </p>
+          <ul>
+            <li>🚨 <strong>Emergencias (México):</strong> 911</li>
+            <li>💬 <strong>Línea de la Vida:</strong> 800 911 2000 (24 h, gratuita)</li>
+            <li>🧠 <strong>SAPTEL (apoyo psicológico):</strong> 55 5259 8121</li>
+            <li>🌎 Fuera de México: busca la línea de apoyo o emergencias de tu país.</li>
+          </ul>
+          <p class="help-note">Hablar con un profesional o una persona de confianza ayuda.</p>
+        </details>
 
         <button id="btn-share" class="btn btn-share">📣 Compartir mi resultado</button>
         <button id="btn-story" class="btn btn-story">📸 Compartir como imagen (Stories)</button>
