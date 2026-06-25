@@ -63,6 +63,7 @@
         </div>
 
         <button id="btn-start" class="btn btn-primary">Comenzar</button>
+        <button class="btn btn-ghost js-achievements">🏆 Mis logros</button>
 
         <p class="disclaimer">
           Este test es solo para reflexión personal y entretenimiento.
@@ -110,7 +111,7 @@
         <p id="result-desc" class="result-desc"></p>
         <p id="result-advice" class="result-advice"></p>
 
-        <details class="help-box">
+        <details class="help-box" id="help-box">
           <summary>¿Necesitas ayuda? Recursos de apoyo</summary>
           <p>
             Este test es solo para reflexión y entretenimiento; <strong>no es un
@@ -125,6 +126,9 @@
           </ul>
           <p class="help-note">Hablar con un profesional o una persona de confianza ayuda.</p>
         </details>
+
+        <button id="btn-prediction" class="btn btn-prediction">🔮 Ver mi predicción</button>
+        <p id="prediction-box" class="prediction-box hidden"></p>
 
         <button id="btn-share" class="btn btn-share">📣 Compartir mi resultado</button>
         <button id="btn-story" class="btn btn-story">📸 Compartir como imagen (Stories)</button>
@@ -145,10 +149,23 @@
 
         <button id="btn-retry" class="btn btn-primary">Volver a intentar</button>
         <button id="btn-home" class="btn btn-ghost">Inicio</button>
+        <button class="btn btn-ghost js-achievements">🏆 Mis logros</button>
       </div>
     </section>
 
   </main>
+
+  <!-- Modal de logros -->
+  <div id="achievements-modal" class="modal hidden" role="dialog" aria-modal="true" aria-label="Mis logros">
+    <div class="modal-card">
+      <h2 class="modal-title">🏆 Mis logros</h2>
+      <div id="achievements-list" class="achievements-list"></div>
+      <button id="btn-close-ach" class="btn btn-primary">Cerrar</button>
+    </div>
+  </div>
+
+  <!-- Aviso de logro desbloqueado -->
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 
   <script src="app.js"></script>
 

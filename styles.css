@@ -517,3 +517,104 @@ body { transition: background-color 0.3s ease, color 0.3s ease; }
     transition-duration: 0.001ms !important;
   }
 }
+
+
+/* ===========================================================
+   LOTE 2: predicción, logros (modal) y toast
+   =========================================================== */
+
+/* ---------- Predicción ---------- */
+.btn-prediction {
+  background: #8a6fb0;
+  color: #fff;
+  box-shadow: 4px 4px 0 var(--shadow);
+}
+.btn-prediction:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--shadow); }
+.prediction-box {
+  text-align: left;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  white-space: pre-line;
+  background: var(--bg-2);
+  border-left: 3px solid #8a6fb0;
+  border-radius: 0 4px 4px 0;
+  padding: 12px 14px;
+  margin: 4px 0 8px;
+  animation: slideUp 0.35s ease both;
+}
+
+/* ---------- Modal de logros ---------- */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: fade 0.25s ease;
+}
+.modal-card {
+  background: var(--card);
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  box-shadow: 6px 6px 0 var(--shadow);
+  padding: 20px;
+  width: 100%;
+  max-width: 420px;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+.modal-title {
+  text-align: center;
+  color: var(--accent-dark);
+  margin-bottom: 16px;
+  letter-spacing: 1px;
+}
+.achievements-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.ach-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  border: 2px solid var(--line);
+  border-radius: 4px;
+  padding: 10px 12px;
+  background: var(--bg-2);
+  opacity: 0.55;
+}
+.ach-item.unlocked {
+  opacity: 1;
+  border-color: var(--accent);
+}
+.ach-icon { font-size: 1.8rem; line-height: 1; }
+.ach-text { font-size: 0.85rem; line-height: 1.35; }
+.ach-text small { color: var(--ink-soft); }
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--accent-dark);
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 24px;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  z-index: 60;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}

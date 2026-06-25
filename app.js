@@ -357,6 +357,12 @@ const els = {
   themeToggle: document.getElementById("theme-toggle"),
   themeIcon: document.getElementById("theme-icon"),
   volumeSlider: document.getElementById("volume-slider"),
+  btnPrediction: document.getElementById("btn-prediction"),
+  predictionBox: document.getElementById("prediction-box"),
+  achievementsModal: document.getElementById("achievements-modal"),
+  achievementsList: document.getElementById("achievements-list"),
+  btnCloseAch: document.getElementById("btn-close-ach"),
+  toast: document.getElementById("toast"),
   btnShare: document.getElementById("btn-share"),
   btnStory: document.getElementById("btn-story"),
   storyHint: document.getElementById("story-hint"),
@@ -461,10 +467,12 @@ function showResult(score) {
     : "Tu resultado";
 
   // Guardamos el resultado para compartir y preparamos los enlaces
-  lastResult = { score: score, title: tier.title };
+  lastResult = { score: score, title: tier.title, dominant: dominantStyle() };
   els.shareMenu.classList.add("hidden");
   els.copyOk.classList.add("hidden");
   els.storyHint.classList.add("hidden");
+  els.predictionBox.classList.add("hidden");
+  registerPlay(score, tier.title);
 
   // Marcador en la escala (1 -> 0%, 100 -> 100%)
   const pct = ((score - 1) / 99) * 100;
@@ -837,6 +845,98 @@ function setTheme(dark) {
 }
 
 /* -----------------------------------------------------------
+   9b) LOGROS Y PREDICCIÓN
+----------------------------------------------------------- */
+const ACHIEVEMENTS = [
+  { id: "primer_paso", icon: "🌱", title: "Primer paso", desc: "Completaste el test por primera vez." },
+  { id: "autoexploracion", icon: "🔁", title: "Autoexploración", desc: "Completaste el test 5 veces." },
+  { id: "equilibrio", icon: "⚖️", title: "Equilibrio", desc: "Obtuviste un resultado equilibrado (41–60)." },
+  { id: "multifacetico", icon: "🎭", title: "Multifacético", desc: "Obtuviste 3 perfiles distintos." },
+  { id: "difusor", icon: "📣", title: "Difusor", desc: "Compartiste tu resultado." },
+  { id: "modo_noche", icon: "🌙", title: "Modo noche", desc: "Activaste el modo oscuro." },
+  { id: "autocuidado", icon: "🆘", title: "Autocuidado", desc: "Consultaste los recursos de ayuda." },
+];
+
+function getUnlocked() {
+  try { return JSON.parse(localStorage.getItem("qpt_ach") || "{}"); } catch (e) { return {}; }
+}
+function unlock(id) {
+  const u = getUnlocked();
+  if (u[id]) return;
+  u[id] = true;
+  try { localStorage.setItem("qpt_ach", JSON.stringify(u)); } catch (e) {}
+  const a = ACHIEVEMENTS.find((x) => x.id === id);
+  if (a) showToast("🏆 Logro: " + a.title);
+}
+function showToast(text) {
+  if (!els.toast) return;
+  els.toast.textContent = text;
+  els.toast.classList.remove("hidden");
+  requestAnimationFrame(() => els.toast.classList.add("show"));
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => {
+    els.toast.classList.remove("show");
+    setTimeout(() => els.toast.classList.add("hidden"), 320);
+  }, 2600);
+}
+function renderAchievements() {
+  const u = getUnlocked();
+  els.achievementsList.innerHTML = "";
+  ACHIEVEMENTS.forEach((a) => {
+    const got = !!u[a.id];
+    const div = document.createElement("div");
+    div.className = "ach-item" + (got ? " unlocked" : "");
+    div.innerHTML =
+      '<span class="ach-icon">' + (got ? a.icon : "🔒") + "</span>" +
+      '<span class="ach-text"><strong>' + a.title + "</strong><br><small>" +
+      a.desc + "</small></span>";
+    els.achievementsList.appendChild(div);
+  });
+}
+function openAchievements() { renderAchievements(); els.achievementsModal.classList.remove("hidden"); }
+function closeAchievements() { els.achievementsModal.classList.add("hidden"); }
+
+// Registra una partida y desbloquea logros relacionados
+function registerPlay(score, title) {
+  let plays = 1;
+  try { plays = parseInt(localStorage.getItem("qpt_plays") || "0", 10) + 1; localStorage.setItem("qpt_plays", String(plays)); } catch (e) {}
+  let profiles = [];
+  try { profiles = JSON.parse(localStorage.getItem("qpt_profiles") || "[]"); } catch (e) {}
+  if (profiles.indexOf(title) === -1) {
+    profiles.push(title);
+    try { localStorage.setItem("qpt_profiles", JSON.stringify(profiles)); } catch (e) {}
+  }
+  unlock("primer_paso");
+  if (plays >= 5) unlock("autoexploracion");
+  if (score >= 41 && score <= 60) unlock("equilibrio");
+  if (profiles.length >= 3) unlock("multifacetico");
+}
+
+// Predicción lúdica según el estilo de respuesta dominante (0..4)
+const PREDICTIONS = [
+  "es muy probable que más de una vez dijiste \"sí\" cuando en realidad querías decir \"no\", y alguien se acostumbró a apoyarse en tu bondad. Quizá cargaste con cosas que no te tocaban con tal de no incomodar. Hoy podrías empezar a poner pequeños límites: tu paz también importa.",
+  "seguramente hubo un momento en que preferiste alejarte en silencio antes que enfrentar un conflicto, y algo que te importaba quedó sin resolver. Evitar te ha protegido, pero también te ha hecho callar. Tal vez sea hora de decir, con calma, lo que sientes.",
+  "es probable que alguna vez pusiste un límite con calma y firmeza, y eso cambió una relación para bien. La gente suele confiar en ti porque eres justo. Sigue así: ese equilibrio entre escuchar y defenderte es tu mayor fortaleza.",
+  "tal vez en algún grupo terminaste tomando las riendas y los demás te siguieron, porque tienes madera de líder. Pero quizá alguna vez alguien sintió que no fue escuchado. Si combinas tu fuerza con un poco más de escucha, llegarás aún más lejos.",
+  "es posible que una reacción intensa en un mal día te haya costado una amistad o una oportunidad. Tu carácter fuerte te defiende, pero a veces también te aísla. Canalizar esa energía con empatía podría abrirte muchas puertas.",
+];
+function dominantStyle() {
+  const tally = [0, 0, 0, 0, 0];
+  answers.forEach((optIndex, qIndex) => {
+    if (optIndex !== null) tally[questions[qIndex].options[optIndex].value]++;
+  });
+  let best = 0;
+  for (let i = 1; i < tally.length; i++) if (tally[i] > tally[best]) best = i;
+  return best;
+}
+function buildPrediction() {
+  const who = playerName ? playerName : "Tú";
+  const idx = (lastResult.dominant != null) ? lastResult.dominant : 2;
+  return "🔮 " + who + ", " + PREDICTIONS[idx] +
+    "\n\n(Es una interpretación lúdica basada en tus respuestas, no una predicción real.)";
+}
+
+/* -----------------------------------------------------------
    10) EVENTOS
 ----------------------------------------------------------- */
 els.btnStart.addEventListener("click", () => {
@@ -865,9 +965,9 @@ els.btnHome.addEventListener("click", () => {
   showScreen("start");
 });
 
-els.btnShare.addEventListener("click", () => { shareResult(); });
-els.btnCopy.addEventListener("click", () => { copyShareText(); });
-els.btnStory.addEventListener("click", () => { shareStory(); });
+els.btnShare.addEventListener("click", () => { shareResult(); unlock("difusor"); });
+els.btnCopy.addEventListener("click", () => { copyShareText(); unlock("difusor"); });
+els.btnStory.addEventListener("click", () => { shareStory(); unlock("difusor"); });
 
 els.soundToggle.addEventListener("click", () => {
   initAudio();
@@ -879,10 +979,29 @@ els.soundToggle.addEventListener("click", () => {
 els.themeToggle.addEventListener("click", () => {
   const isDark = document.documentElement.getAttribute("data-theme") === "dark";
   setTheme(!isDark);
+  if (!isDark) unlock("modo_noche");
 });
 
 els.volumeSlider.addEventListener("input", () => {
   applyVolume(parseInt(els.volumeSlider.value, 10) / 100);
+});
+
+els.btnPrediction.addEventListener("click", () => {
+  els.predictionBox.textContent = buildPrediction();
+  els.predictionBox.classList.remove("hidden");
+});
+
+document.querySelectorAll(".js-achievements").forEach((b) =>
+  b.addEventListener("click", openAchievements)
+);
+els.btnCloseAch.addEventListener("click", closeAchievements);
+els.achievementsModal.addEventListener("click", (e) => {
+  if (e.target === els.achievementsModal) closeAchievements();
+});
+
+const helpBoxEl = document.getElementById("help-box");
+if (helpBoxEl) helpBoxEl.addEventListener("toggle", () => {
+  if (helpBoxEl.open) unlock("autocuidado");
 });
 
 /* -----------------------------------------------------------
