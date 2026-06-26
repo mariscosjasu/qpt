@@ -20,7 +20,7 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-html, body {
+html {
   height: 100%;
 }
 
@@ -31,8 +31,6 @@ body {
   color: var(--ink);
   min-height: 100dvh;
   display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 16px;
   -webkit-tap-highlight-color: transparent;
   overflow-x: hidden;
@@ -41,6 +39,7 @@ body {
 .app {
   width: 100%;
   max-width: 460px;
+  margin: auto;
 }
 
 /* ---------- Pantallas ---------- */
