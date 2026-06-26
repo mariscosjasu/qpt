@@ -303,6 +303,10 @@ let playerName = "";
 const SHARE_URL = "https://appsmx.github.io/qpt/";
 const SHARE_URL_CORTA = "appsmx.github.io/qpt";
 
+// Backend (Cloudflare Worker) para chat con IA y estadísticas globales
+const API_BASE = "https://qpt-api.appsmx.workers.dev";
+let chatHistory = [];
+
 // Guardamos el último resultado para poder compartirlo
 let lastResult = { score: 5, title: "" };
 
@@ -363,6 +367,13 @@ const els = {
   achievementsList: document.getElementById("achievements-list"),
   btnCloseAch: document.getElementById("btn-close-ach"),
   toast: document.getElementById("toast"),
+  globalStats: document.getElementById("global-stats"),
+  btnChat: document.getElementById("btn-chat"),
+  chatModal: document.getElementById("chat-modal"),
+  chatMessages: document.getElementById("chat-messages"),
+  chatInput: document.getElementById("chat-input"),
+  chatSend: document.getElementById("chat-send"),
+  btnCloseChat: document.getElementById("btn-close-chat"),
   btnShare: document.getElementById("btn-share"),
   btnStory: document.getElementById("btn-story"),
   storyHint: document.getElementById("story-hint"),
@@ -473,6 +484,15 @@ function showResult(score) {
   els.storyHint.classList.add("hidden");
   els.predictionBox.classList.add("hidden");
   registerPlay(score, tier.title);
+
+  // Chat: reinicia conversación para este resultado
+  chatHistory = [];
+  if (els.chatMessages) els.chatMessages.innerHTML = "";
+  // Estadísticas globales
+  if (API_BASE) {
+    els.globalStats.textContent = "";
+    postStat(tier.title).then(loadGlobalStats);
+  }
 
   // Marcador en la escala (1 -> 0%, 100 -> 100%)
   const pct = ((score - 1) / 99) * 100;
@@ -937,6 +957,82 @@ function buildPrediction() {
 }
 
 /* -----------------------------------------------------------
+   9c) ESTADÍSTICAS GLOBALES Y CHAT CON IA (backend)
+----------------------------------------------------------- */
+function postStat(profile) {
+  if (!API_BASE) return Promise.resolve();
+  return fetch(API_BASE + "/api/stat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ profile: profile }),
+  }).catch(() => {});
+}
+
+function loadGlobalStats() {
+  if (!API_BASE) return;
+  fetch(API_BASE + "/api/stats")
+    .then((r) => r.json())
+    .then((data) => {
+      const total = data.total || 0;
+      if (total < 1) { els.globalStats.textContent = ""; return; }
+      const count = (data.perfiles && data.perfiles[lastResult.title]) || 0;
+      const pct = Math.round((count / total) * 100);
+      els.globalStats.textContent =
+        "📊 El " + pct + "% de " + total + " personas también obtuvo \"" + lastResult.title + "\".";
+    })
+    .catch(() => { els.globalStats.textContent = ""; });
+}
+
+function addChatMsg(role, text) {
+  const div = document.createElement("div");
+  div.className = "chat-msg chat-" + role;
+  div.textContent = text;
+  els.chatMessages.appendChild(div);
+  els.chatMessages.scrollTop = els.chatMessages.scrollHeight;
+  return div;
+}
+
+function openChat() {
+  if (!API_BASE) return;
+  if (els.chatMessages.children.length === 0) {
+    const greet = (playerName ? "Hola, " + playerName + ". " : "¡Hola! ") +
+      "Tu resultado fue " + lastResult.score + "/100 (" + lastResult.title +
+      "). ¿Quieres reflexionar sobre eso o preguntarme algo?";
+    addChatMsg("assistant", greet);
+    chatHistory.push({ role: "assistant", content: greet });
+  }
+  els.chatModal.classList.remove("hidden");
+  setTimeout(() => els.chatInput.focus(), 120);
+}
+function closeChat() { els.chatModal.classList.add("hidden"); }
+
+async function sendChat() {
+  const text = els.chatInput.value.trim();
+  if (!text) return;
+  els.chatInput.value = "";
+  addChatMsg("user", text);
+  chatHistory.push({ role: "user", content: text });
+  const pending = addChatMsg("assistant", "…");
+  els.chatSend.disabled = true;
+  try {
+    const res = await fetch(API_BASE + "/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages: chatHistory }),
+    });
+    const data = await res.json();
+    const reply = (data && data.reply) ? data.reply : "Lo siento, no pude responder ahora. Inténtalo de nuevo.";
+    pending.textContent = reply;
+    if (data && data.reply) chatHistory.push({ role: "assistant", content: reply });
+  } catch (e) {
+    pending.textContent = "No hay conexión con el asistente. Revisa tu internet e inténtalo de nuevo.";
+  } finally {
+    els.chatSend.disabled = false;
+    els.chatMessages.scrollTop = els.chatMessages.scrollHeight;
+  }
+}
+
+/* -----------------------------------------------------------
    10) EVENTOS
 ----------------------------------------------------------- */
 els.btnStart.addEventListener("click", () => {
@@ -1002,6 +1098,16 @@ els.achievementsModal.addEventListener("click", (e) => {
 const helpBoxEl = document.getElementById("help-box");
 if (helpBoxEl) helpBoxEl.addEventListener("toggle", () => {
   if (helpBoxEl.open) unlock("autocuidado");
+});
+
+els.btnChat.addEventListener("click", openChat);
+els.btnCloseChat.addEventListener("click", closeChat);
+els.chatModal.addEventListener("click", (e) => {
+  if (e.target === els.chatModal) closeChat();
+});
+els.chatSend.addEventListener("click", sendChat);
+els.chatInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") sendChat();
 });
 
 /* -----------------------------------------------------------

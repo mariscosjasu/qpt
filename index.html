@@ -110,6 +110,7 @@
         <h2 id="result-title" class="result-title" aria-live="polite"></h2>
         <p id="result-desc" class="result-desc"></p>
         <p id="result-advice" class="result-advice"></p>
+        <p id="global-stats" class="global-stats"></p>
 
         <details class="help-box" id="help-box">
           <summary>¿Necesitas ayuda? Recursos de apoyo</summary>
@@ -129,6 +130,7 @@
 
         <button id="btn-prediction" class="btn btn-prediction">🔮 Ver mi predicción</button>
         <p id="prediction-box" class="prediction-box hidden"></p>
+        <button id="btn-chat" class="btn btn-chat">💬 Hablar con un asistente</button>
 
         <button id="btn-share" class="btn btn-share">📣 Compartir mi resultado</button>
         <button id="btn-story" class="btn btn-story">📸 Compartir como imagen (Stories)</button>
@@ -166,6 +168,24 @@
 
   <!-- Aviso de logro desbloqueado -->
   <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+  <!-- Chat con asistente de IA -->
+  <div id="chat-modal" class="modal hidden" role="dialog" aria-modal="true" aria-label="Asistente">
+    <div class="modal-card chat-card">
+      <h2 class="modal-title">💬 Asistente</h2>
+      <p class="chat-disclaimer">
+        No soy un profesional de salud y esto no sustituye ayuda profesional.
+        Si estás en crisis, llama al <strong>911</strong> o a la
+        <strong>Línea de la Vida 800 911 2000</strong>.
+      </p>
+      <div id="chat-messages" class="chat-messages"></div>
+      <div class="chat-input-row">
+        <input id="chat-input" class="chat-input" type="text" placeholder="Escribe tu mensaje…" autocomplete="off" />
+        <button id="chat-send" class="chat-send" aria-label="Enviar">➤</button>
+      </div>
+      <button id="btn-close-chat" class="btn btn-ghost">Cerrar</button>
+    </div>
+  </div>
 
   <script src="app.js"></script>
 

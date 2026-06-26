@@ -618,3 +618,101 @@ body { transition: background-color 0.3s ease, color 0.3s ease; }
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
+
+
+/* ===========================================================
+   LOTE 4: estadísticas globales y chat con IA
+   =========================================================== */
+
+.global-stats {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  background: var(--bg-2);
+  border: 1px dashed var(--line);
+  border-radius: 4px;
+  padding: 8px 10px;
+  margin: 8px 0;
+}
+.global-stats:empty { display: none; }
+
+.btn-chat {
+  background: #4a6f8a;
+  color: #fff;
+  box-shadow: 4px 4px 0 var(--shadow);
+}
+.btn-chat:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--shadow); }
+
+/* Tarjeta del chat */
+.chat-card {
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  max-height: 600px;
+}
+.chat-disclaimer {
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+  background: var(--bg-2);
+  border-radius: 4px;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  text-align: left;
+}
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px;
+  margin-bottom: 10px;
+}
+.chat-msg {
+  max-width: 85%;
+  padding: 9px 12px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  text-align: left;
+}
+.chat-user {
+  align-self: flex-end;
+  background: var(--accent);
+  color: #fff;
+  border-bottom-right-radius: 3px;
+}
+.chat-assistant {
+  align-self: flex-start;
+  background: var(--bg-2);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-bottom-left-radius: 3px;
+}
+.chat-input-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.chat-input {
+  flex: 1;
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: 11px 12px;
+  border: 2px solid var(--line);
+  border-radius: 4px;
+  background: var(--card);
+  color: var(--ink);
+}
+.chat-input:focus { outline: none; border-color: var(--accent); }
+.chat-send {
+  width: 48px;
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+.chat-send:disabled { opacity: 0.5; cursor: default; }
